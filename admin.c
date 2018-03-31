@@ -3,13 +3,13 @@
 #include "./interfaceUI.h"
 
 //管理员注册
-int AdminRegister(lottNode *pHead)
+int AdminRegister(adminNode *pHead)
 {
-	lottInfo data;
-	lottNode *temp = pHead->pNext;
-	memset(&data, '\0', LOTTINFO_LEN);
+	adminInfo data;
+	adminNode *temp = pHead->pNext;
+	memset(&data, '\0', ADMININFO_LEN);
 	getAdminData(&data);
-	pHead = readFromFile();
+	pHead = readadminFile();
 	while(NULL != temp)
     {
         if(strcmp(data.name, temp->data.name) == 0)
@@ -38,24 +38,24 @@ int AdminRegister(lottNode *pHead)
         sleep(1);
         system("clear");
         add_admin(pHead, data);
-        writeToFile(pHead);
+        writeadminFile(pHead);
         adminlogin(pHead);
 	}
 	return 1;
 }
 
 //管理员登录
-int adminlogin(lottNode *pHead)
+int adminlogin(adminNode *pHead)
 {
-	lottInfo data;
-	lottNode *temp = pHead->pNext;
-	memset(&data, '\0', LOTTINFO_LEN);
+	adminInfo data;
+	adminNode *temp = pHead->pNext;
+	memset(&data, '\0', ADMININFO_LEN);
 	printf("\n\t***********管理员登录***************");
 	printf("\n\t帐号：");
 	mygets(data.name, sizeof(data.name));
 	printf("\n\t密码：");
 	data.pwd = myscanf();
-	pHead = readFromFile();
+	pHead = readadminFile();
 	while(NULL != temp)
     {
        if(strcmp(temp->data.name, data.name) == 0 && data.pwd == temp->data.pwd)
@@ -165,7 +165,7 @@ int checkFunc(lottNode *pHead)
     if(NULL != p)
     {
         printf("\tID\t类型\t单价\t已售数量\t状态\t发布时间\t开奖时间\n");
-        printf("\t%ld\t%s\t%d\t%d\t\t%d\t%s\t\t%s\n", p->data.lottID, p->data.type, p->data.price,p->data.amount,p->data.state,p->data.startime,
+        printf("\t%ld\t%s\t%d\t%d\t\t%d\t%s\t%s\n", p->data.lottID, p->data.type, p->data.price,p->data.amount,p->data.state,p->data.startime,
 												  p->data.endtime);
 		printf("\n\t按ENTER键继续.....");
 		scanf("%c",&getch);
@@ -186,24 +186,21 @@ int checkFunc(lottNode *pHead)
 	return 0;
 }
 
-//按帐号余额有序显示彩民
-void showAllUser(userNode *pHead)
+//有序显示所有彩票-----按ID
+void showAllLott(lottNode *pHead)
 {
-    char getch = '0';
-    if(NULL == pHead || NULL == pHead->pNext)
+    pHead = readFromFile();
+    lottNode *temp = pHead->pNext;
+    printf("\n\t彩票ID\t彩票类型\t彩票单价\t认购数量\t开奖状态\t发布时间\t开奖时间\n");
+    sort(pHead);
+    while(NULL != temp)
     {
-        printf("\n\t%s:the link is empty!\n", __func__);
-        return;
-    }
-    pHead = readFile();
-    userNode *p = pHead->pNext;
-    printf("\n\t帐号\t余额\n\t");
-    while(NULL != p)
-    { 
-        printf("\n\t%s\t%d\n", p->data.name, p->data.balance);
-        p = p->pNext;
+        printf("\t%ld\t%s\t%d\t%d\t\t%d\t%s\t%s\n", temp->data.lottID, temp->data.type, temp->data.price, temp->data.amount, temp->data.state, temp->data.startime,
+                                                    temp->data.endtime);
+        temp = temp->pNext;
     }
     printf("\n\t按ENTER键继续.....");
+    char getch = '0';
 	scanf("%c",&getch);
 	if(getch == '\n')
 	{
@@ -212,6 +209,7 @@ void showAllUser(userNode *pHead)
     }
     return;
 }
+
 
 //开奖------管理员指定彩票ID
 int openFunc(lottNode *pHead)
@@ -258,31 +256,9 @@ int openFunc(lottNode *pHead)
 	return 1;
 }
 
-int adminloginMenu(lottNode *pHead)
-{
-    system("clear");
-    adminloginUI();
-    int choice = myscanf();
-    switch(choice)
-    {
-        case 1:
-        {
-            AdminRegister(pHead);
-            break;
-        }
-        case 2:
-        {
-            adminlogin(pHead);
-            break;
-        }
-    }
-    return 1;
-}
-
 int adminFunc()
 {
     lottNode *pHead = readFromFile();
-    userNode *pHead1 = readFile();
 	system("clear");
     adminUI();
     int choice = myscanf();
@@ -305,7 +281,7 @@ int adminFunc()
 		}
 		case 4:
 		{
-            showAllUser(pHead1);
+            showAllLott(pHead);
 			break;
 		}
         case 5:

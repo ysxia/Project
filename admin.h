@@ -3,12 +3,12 @@
 
 #include"./list.h"
 
-int AdminRegister(lottNode *pHead);
-int adminlogin(lottNode *pHead);
+int AdminRegister(adminNode *pHead);
+int adminlogin(adminNode *pHead);
 int addFunc(lottNode *pHead);
 int delFunc(lottNode *pHead);
 int checkFunc(lottNode *pHead);
-void showAllUser(userNode *pHead);
+void showAllLott(lottNode *pHead);
 int openFunc(lottNode *pHead);
 int adminFunc();
 

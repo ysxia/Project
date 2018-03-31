@@ -5,7 +5,7 @@
 #include "./admin.h"
 
 
-int adminLoginMenu(lottNode *pHead)
+int adminLoginMenu(adminNode *pHead)
 {
     int choice = myscanf();
     switch(choice)
@@ -53,7 +53,7 @@ int loginMenu(userNode *pHead)
 
 int mainMenu()
 {
-    lottNode *pHead1 = readFromFile();
+    adminNode *pHead1 = readadminFile();
     userNode *pHead2 = readFile();
     system("clear");
     mainUI();

@@ -26,7 +26,7 @@ void adminUI()
     printf("\t1. 发布彩票\n");
     printf("\t2. 删除彩票\n");
     printf("\t3. 查询彩票信息\n");
-    printf("\t4. 显示所有彩民\n");
+    printf("\t4. 显示所有彩票\n");
 	printf("\t5. 开奖\n");
     printf("\t0. 退出\n");
     printf("\t请选择: ");

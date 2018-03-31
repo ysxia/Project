@@ -3,7 +3,7 @@
 
 #include "./list.h"
 
-int adminLoginMenu(lottNode *pHead);
+int adminLoginMenu(adminNode *pHead);
 int loginMenu(userNode *pHead);
 int mainMenu();
 int main(void);

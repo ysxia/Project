@@ -27,11 +27,23 @@ typedef struct userNode
     struct userNode *pNext;
 }userNode;
 
-//彩票信息结构
-typedef struct lottInfo
+//管理员信息结构
+typedef struct adminInfo
 {
     char name[32];       //管理员账户
     int pwd;             //管理员密码
+}adminInfo;
+
+//管理员节点结构
+typedef struct adminNode
+{
+    struct adminInfo data;
+    struct adminNode *pNext;
+}adminNode;
+
+//彩票信息结构
+typedef struct lottInfo
+{
     long lottID;        //ID
     char type[36];      //彩票类型
     int price;          //彩票单价
@@ -54,6 +66,11 @@ typedef struct lottNode
 //宏定义用户信息节点结构长度
 #define USERNODE_LEN sizeof(struct userNode)
 
+//宏定义管理员信息结构长度
+#define ADMININFO_LEN sizeof(struct adminInfo)
+//宏定义管理员信息节点结构长度
+#define ADMINNODE_LEN sizeof(struct adminNode)
+
 //宏定义彩票信息结构长度
 #define LOTTINFO_LEN sizeof(struct lottInfo)
 //宏定义彩票信息节点结构长度
@@ -63,10 +80,12 @@ typedef struct lottNode
 //服务端功能
 //创建彩票节点
 lottNode *makeNode();
+//创建管理员节点
+adminNode *makeadminNode();
 //获取管理员信息
-int getAdminData(lottInfo *temp);
+int getAdminData(adminInfo *temp);
 //添加管理员信息-------管理员注册
-int add_admin(lottNode *pHead, lottInfo data);
+int add_admin(adminNode *pHead, adminInfo data);
 //彩票数据录入
 int getData(lottInfo *temp);
 //发布彩票
@@ -75,15 +94,19 @@ int add_lott(lottNode *pHead, lottInfo data);
 int del_lott(lottNode *pHead, long lottID);
 //按ID查询彩票信息
 lottNode *lookupUser(lottNode *pHead, long lottID);
-//按帐号余额有序显示彩民（未排序）
-void showAllUser(userNode *pHead);
-//保存数据
+//按ID有序显示彩票
+int sort(lottNode *pHead);
+//保存彩票数据
 void writeToFile(lottNode *pHead);
-//加载数据
+//保存管理员数据
+void writeadminFile(adminNode *pHead);
+//加载管理员数据
+adminNode *readadminFile();
+//加载彩票数据
 lottNode *readFromFile();
 
 //客户端功能
-//分配空间
+//创建用户节点
 userNode *makeUserNode();
 //获取用户信息
 int getUserData(userInfo *temp);

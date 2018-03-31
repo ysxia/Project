@@ -12,8 +12,17 @@ lottNode *makeNode()
     return newNode;
 }
 
+adminNode *makeadminNode()
+{
+    adminNode *newNode = (adminNode*)malloc(ADMINNODE_LEN);
+	if(NULL == newNode)
+        newNode = (adminNode*)malloc(ADMINNODE_LEN);
+    newNode->pNext = NULL;
+    return newNode;
+}
+
 //获取管理员信息
-int getAdminData(lottInfo *temp)
+int getAdminData(adminInfo *temp)
 {
     system("clear");
     printf("\n\t*****************管理员注册*******************\n");
@@ -25,7 +34,7 @@ int getAdminData(lottInfo *temp)
 }
 
 //添加管理员信息-------管理员注册
-int add_admin(lottNode *pHead, lottInfo data)
+int add_admin(adminNode *pHead, adminInfo data)
 {
     if(NULL == pHead)
     {
@@ -34,7 +43,7 @@ int add_admin(lottNode *pHead, lottInfo data)
     }
 
     //申请新的节点并初始化数据域
-    lottNode *newNode = makeNode();
+    adminNode *newNode = makeadminNode();
     newNode->data = data;
 
     //创建链表
@@ -135,7 +144,35 @@ lottNode *lookupUser(lottNode *pHead, long lottID)
     return NULL;
 }
 
-//保存数据
+//彩票排序-----按ID
+int sort(lottNode *pHead)
+{
+      if(NULL == pHead)
+    {
+		printf("\n\t%s:the link is empty!\n",__func__);
+		return -1;
+    }
+
+    lottNode *max = pHead;
+    lottNode *min = max->pNext;
+    lottInfo temp;
+    for(max = pHead; max->pNext != NULL; max = max->pNext)
+    {
+        for(min = max->pNext; min->pNext != NULL; min = min->pNext)
+        {
+            if(max->data.lottID > min->data.lottID)
+            {
+                temp = min->data;
+                min->data = max->data;
+                max->data = temp;
+            }
+        }
+    }
+    return 0;
+}
+
+
+//保存彩票数据
 void writeToFile(lottNode *pHead)
 {
     if(NULL == pHead || NULL == pHead->pNext)
@@ -164,7 +201,60 @@ void writeToFile(lottNode *pHead)
     return;
 }
 
-//加载数据
+//保存管理员数据
+void writeadminFile(adminNode *pHead)
+{
+    if(NULL == pHead || NULL == pHead->pNext)
+    {
+        printf("\n\tthere is not info to save!\n");
+        return;
+    }
+    FILE *fpw = fopen("admin.dat", "w");
+    if(NULL == fpw)
+    {
+        perror("fopen error");
+        return;
+    }
+
+    adminNode *temp = pHead->pNext;
+    int ret = 0;
+    while(NULL != temp)
+    {
+        ret = fwrite(&temp->data, ADMININFO_LEN, 1, fpw);
+        if(ret < 0)
+            break;
+        temp = temp->pNext;
+    }
+
+    fclose(fpw);
+    return;
+}
+
+//加载管理员数据
+adminNode *readadminFile()
+{
+    FILE *fpr = fopen("./admin.dat", "r");
+    if(NULL == fpr)
+    {
+        perror("fopen error");
+        exit(1);
+    }
+    adminNode *pHead = makeadminNode();
+    adminNode *newNode = makeadminNode();
+
+    while(fread(&newNode->data, ADMININFO_LEN, 1, fpr) > 0)
+    {
+        newNode->pNext = pHead->pNext;
+        pHead->pNext = newNode;
+        newNode = makeadminNode();
+    }
+    free(newNode);
+    newNode = NULL;
+    fclose(fpr);
+    return pHead;
+}
+
+//加载彩票数据
 lottNode *readFromFile()
 {
     FILE *fpr = fopen("./lott.dat", "r");
