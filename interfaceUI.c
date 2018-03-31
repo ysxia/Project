@@ -17,6 +17,7 @@ void adminloginUI()
 {
     printf("\t1. 管理员注册\n");
     printf("\t2. 管理员登录\n");
+    printf("\t0. 返回\n");
 	printf("\t请选择：");
     return;
 }
@@ -37,6 +38,7 @@ void userloginUI()
 {
     printf("\t1. 用户注册\n");
     printf("\t2. 用户登录\n");
+    printf("\t0. 返回\n");
 	printf("\t请选择：");
     return;
 }

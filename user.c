@@ -2,6 +2,7 @@
 #include "./interfaceUI.h"
 #include "./public.h"
 #include "./list.h"
+#include "./LottManage.h"
 
 //用户登录
 userNode* login(userNode *pHead)
@@ -22,7 +23,7 @@ userNode* login(userNode *pHead)
             printf("\n\t登录成功\n");
             sleep(1);
             system("clear");
-            judge(pHead);
+            judge(temp->data.name);
             userMenu(temp->data.name);
             return NULL;
        }
@@ -107,8 +108,8 @@ int userData(char *name)
     {
         if(strcmp(temp->data.name, name) == 0)
         {
-            printf("\n\t帐号\t余额\n\t");
-            printf("\n\t%s\t%d\n\t", temp->data.name, temp->data.balance);
+            printf("\n\t帐号\t余额\t\n");
+            printf("\n\t%-8s%-8d\n\t", temp->data.name, temp->data.balance);
             printf("\n\t按ENTER键继续.....");
             char getch = '0';
             scanf("%c",&getch);
@@ -138,7 +139,7 @@ int buy_lott(char *name)
     {
         if(temp2->data.state == false)
         {
-            printf("\t%ld\t%s\t%d\t%d\t\t%d\t%s\t%s\n", temp2->data.lottID, temp2->data.type, temp2->data.price,temp2->data.amount,temp2->data.state,temp2->data.startime,
+            printf("\t%-8ld%-8s%-8d%-16d%-8d%-12s%-12s\n", temp2->data.lottID, temp2->data.type, temp2->data.price,temp2->data.amount,temp2->data.state,temp2->data.startime,
 												          temp2->data.endtime);
         }
         temp2 = temp2->pNext;
@@ -181,6 +182,7 @@ int buy_lott(char *name)
                     }
                     else
                     {
+                        system("clear");
                         printf("\n\t余额不足，是否充值（y/n）:");
                         char choice = '0';
                         scanf("%c",&choice);
@@ -196,7 +198,7 @@ int buy_lott(char *name)
             }
             if(NULL == temp2) 
             {
-                printf("\n\t您输入的ID有误！\n");
+                printf("\n\t您选择的彩票不存在！\n");
                 sleep(2);
                 userMenu(name);
                 return 0;
@@ -212,21 +214,36 @@ int  buy_record(char  *name)
 {
     userNode *pHead = readFile();
     userNode *temp = pHead->pNext;
-    printf("\n\t彩票ID\t类型\t\t数量\t状态\n");
+    printf("\n\tID\t类型\t数量\t状态\n");
     while(NULL != temp)
     {
-        if(strcmp(temp->data.name, name) == 0)
+        if(strcmp(temp->data.name, name) == 0 )
         {
-            printf("\n\t%ld\t%s\t%d\t%d\n", temp->data.lottID, temp->data.type, temp->data.amount, temp->data.state);
-            printf("\n\t按ENTER键继续.....");
-            char getch = '0';
-            scanf("%c",&getch);
-            if(getch == '\n')
+            if(temp->data.lottID != 0)
             {
-                userMenu(name);
+                printf("\n\t%-8ld%-8s%-8d%-8d\n", temp->data.lottID, temp->data.type, temp->data.amount, temp->data.state);
+                printf("\n\t按ENTER键继续.....");
+                char getch = '0';
+                scanf("%c",&getch);
+                if(getch == '\n')
+                {
+                    userMenu(name);
+                    return 0;
+                }
                 return 0;
             }
-            return 0;
+            else
+            {
+                printf("\n\n\t尚未购买...\n");
+                printf("\n\t按ENTER键继续.....");
+                char getcha = '0';
+                scanf("%c",&getcha);
+                if(getcha == '\n')
+                {
+                    userMenu(name);
+                    return 0;
+                }
+            }
         }
         temp = temp->pNext;
     }
@@ -249,7 +266,7 @@ int add_bal(char *name)
            data.balance = myscanf();
            temp->data.balance += data.balance;
            writeFile(pHead);
-           printf("\n\t充值成功，即将返回主界面。。。。\n");
+           printf("\n\t充值成功，即将返回主界面...\n");
            sleep(2);
            system("clear");
            userMenu(name);
@@ -259,7 +276,7 @@ int add_bal(char *name)
     }
     if(NULL == temp)
     {
-        printf("\n\t充值失败。。。");
+        printf("\n\t充值失败...");
         return 0;
     }
     return 0;
@@ -280,11 +297,11 @@ int update_pwd(char *name)
              data.passwd = myscanf();
              if(data.passwd == temp->data.passwd)
              {
-                 printf("\n\t请输入新密码：");
+                 printf("\n\t请输入新密码： ");
                  int pwd1 = myscanf();
                  if(pwd1 != temp->data.passwd)
                  {
-                     printf("\n\t请确认新密码：");
+                     printf("\n\t请确认新密码： ");
                      int pwd2 = myscanf();
                      if(pwd1 == pwd2)
                      {
@@ -292,15 +309,16 @@ int update_pwd(char *name)
                          temp->data.passwd = pwd1;
                          system("clear");
                          printf("\n\t密码修改成功!\n");
-                         sleep(1);
+                         sleep(2);
+                         system("clear");
                          writeFile(pHead);
-                         userMenu(name);
+                         loginMenu(pHead);
                          return 1;
                      }
                      else
                      {
                          system("clear");
-                         printf("\n\t两次输入不同，即将返回......");
+                         printf("\n\t两次输入不同，即将返回......\n");
                          sleep(1);
                          update_pwd(name);
                          return 0;
@@ -309,14 +327,14 @@ int update_pwd(char *name)
                  else
                  {
                      system("clear");
-                     printf("\n\t新密码与原密码相同，请重新输入......");
+                     printf("\n\t新密码与原密码相同，请重新输入......\n");
                      update_pwd(name);
                      return 0;
                  }
              }
              else
              {
-                 printf("\n\t密码错误，请重新输入.....");
+                 printf("\n\t密码错误，请重新输入.....\n");
                  update_pwd(name);
                  return 0;
              }
@@ -328,21 +346,18 @@ int update_pwd(char *name)
 
 
 //判断是否中奖
-int judge(userNode *pHead)
+int judge(char *name)
 {
-    pHead = readFile();
+    userNode *pHead = readFile();
     userNode *temp = pHead->pNext;
-   // printf("%s\n", name);
     while(NULL != temp)
     {
-        //printf("%s\n", name);
-        if(temp->data.state == true)
+        if(strcmp(temp->data.name, name) == 0 && temp->data.state == true)
         {
-           // system("clear");
             printf("\n\t\t\t\t恭喜中奖！\n");
-            printf("\n\t中 奖 彩 票  ID：  %ld\n", temp->data.lottID);
-            printf("\n\t中  奖  金  额 ：   %d\n", temp->data.amount * 1000);
-            sleep(2);
+            printf("\n\t\t\t中 奖 彩 票  ID：        %ld\n", temp->data.lottID);
+            printf("\n\t\t\t中  奖  金  额 ：        %d\n", temp->data.amount * 1000);
+            sleep(4);
             userMenu(pHead->data.name);
             return 1;
         }
@@ -364,33 +379,46 @@ int userMenu(char *name)
     int choice = myscanf();
 	switch(choice)
 	{
-        case 1:
+        case 1:                                             //查询个人资料
         {
+            system("clear");
             userData(name);
             break;
         }
-        case 2:
+        case 2:                                             //购买彩票
         {
+            system("clear");
             buy_lott(name);
             break;
         }
-        case 3:
+        case 3:                                             //购买记录
         {
+            system("clear");
             buy_record(name);
             break;
         }
-        case 4:
+        case 4:                                             //余额充值
         {
+            system("clear");
             add_bal(name);
             break;
         }
-        case 5:
+        case 5:                                             //修改密码
         {
+            system("clear");
             update_pwd(name);
             break;
         }
         case 0:
         {
+            printf("\n\t即将退出...\n");
+            sleep(2);
+            break;
+        }
+        default:
+        {
+            printf("\n\t输入有误,请重新输入：\n");
+            userMenu(name);
             break;
         }
 	}

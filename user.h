@@ -10,7 +10,7 @@ int buy_lott(char *name);
 int buy_record(char  *name);
 int add_bal(char *name);
 int update_pwd(char *name);
-int judge(userNode *pHead);
+int judge(char *name);
 int userMenu(char *name);
 int main(void);
 

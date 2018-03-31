@@ -165,7 +165,7 @@ int checkFunc(lottNode *pHead)
     if(NULL != p)
     {
         printf("\tID\t类型\t单价\t已售数量\t状态\t发布时间\t开奖时间\n");
-        printf("\t%ld\t%s\t%d\t%d\t\t%d\t%s\t%s\n", p->data.lottID, p->data.type, p->data.price,p->data.amount,p->data.state,p->data.startime,
+        printf("\t%-8ld%-8s%-8d%-16d%-8d%-12s%-12s", p->data.lottID, p->data.type, p->data.price,p->data.amount,p->data.state,p->data.startime,
 												  p->data.endtime);
 		printf("\n\t按ENTER键继续.....");
 		scanf("%c",&getch);
@@ -191,11 +191,11 @@ void showAllLott(lottNode *pHead)
 {
     pHead = readFromFile();
     lottNode *temp = pHead->pNext;
-    printf("\n\t彩票ID\t彩票类型\t彩票单价\t认购数量\t开奖状态\t发布时间\t开奖时间\n");
+    printf("\n\tID\t类型\t单价\t已售数量\t状态\t发布时间\t开奖时间\n");
     sort(pHead);
     while(NULL != temp)
     {
-        printf("\t%ld\t%s\t%d\t%d\t\t%d\t%s\t%s\n", temp->data.lottID, temp->data.type, temp->data.price, temp->data.amount, temp->data.state, temp->data.startime,
+        printf("\t%-8ld%-8s%-8d%-16d%-8d%-12s%-12s\n", temp->data.lottID, temp->data.type, temp->data.price, temp->data.amount, temp->data.state, temp->data.startime,
                                                     temp->data.endtime);
         temp = temp->pNext;
     }
@@ -264,35 +264,48 @@ int adminFunc()
     int choice = myscanf();
     switch(choice)
     {
-		case 1:
+		case 1:             //发布彩票
 		{
+            system("clear");
 	   		addFunc(pHead);
 	    	break;
 		}
-		case 2:
+		case 2:             //删除彩票
 		{
+            system("clear");
 			delFunc(pHead);
 			break;
 		}
-		case 3:
+		case 3:             //查看彩票信息
 		{
+            system("clear");
 			checkFunc(pHead);
 			break;
 		}
-		case 4:
+		case 4:             //有序显示所有彩票
 		{
+            system("clear");
             showAllLott(pHead);
 			break;
 		}
-        case 5:
+        case 5:             //开奖
         {
+            system("clear");
             openFunc(pHead);
             break;
         }
 		case 0:
 		{
+            printf("\n\t即将退出...\n");
+            sleep(2);
 	    	break;
 		}
+         default:
+        {
+            printf("\n\t输入有误,请重新输入：\n");
+            adminFunc();
+            break;
+        }
     }
 	return 0;
 }

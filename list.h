@@ -117,6 +117,12 @@ void writeFile(userNode *pHead);
 //加载数据
 userNode *readFile();
 
+//销毁用户链表
+void destroyUserList(userNode *pHead);
+//销毁管理员链表
+void destroyAdminList(adminNode *pHead);
+//销毁彩票链表
+void destroyLottList(lottNode *pHead);
 
 #endif
 

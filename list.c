@@ -147,18 +147,18 @@ lottNode *lookupUser(lottNode *pHead, long lottID)
 //彩票排序-----按ID
 int sort(lottNode *pHead)
 {
-      if(NULL == pHead)
+    if(NULL == pHead)
     {
 		printf("\n\t%s:the link is empty!\n",__func__);
 		return -1;
     }
 
-    lottNode *max = pHead;
-    lottNode *min = max->pNext;
+    lottNode *max = NULL;
+    lottNode *min = NULL;
     lottInfo temp;
-    for(max = pHead; max->pNext != NULL; max = max->pNext)
+    for(max = pHead->pNext; max != NULL; max = max->pNext)
     {
-        for(min = max->pNext; min->pNext != NULL; min = min->pNext)
+        for(min = max->pNext; min != NULL; min = min->pNext)
         {
             if(max->data.lottID > min->data.lottID)
             {
@@ -378,7 +378,65 @@ userNode *readFile()
     return pHead;
 }
 
+//销毁用户链表
+void destroyUserList(userNode *pHead)
+{
+    if(NULL == pHead)
+    {
+        printf("\n\t%s:the list is empty!\n", __func__);
+        return;
+    }
 
+    userNode *p = NULL;
+    while(NULL != pHead)
+    {
+        p = pHead;
+        pHead = pHead->pNext;
+        free(p);
+    }
+    p = NULL;
+    return;
+}
+
+//销毁管理员链表
+void destroyAdminList(adminNode *pHead)
+{
+    if(NULL == pHead)
+    {
+        printf("\n\t%s:the list is empty!\n", __func__);
+        return;
+    }
+
+    adminNode *p = NULL;
+    while(NULL != pHead)
+    {
+        p = pHead;
+        pHead = pHead->pNext;
+        free(p);
+    }
+    p = NULL;
+    return;
+}
+
+//销毁彩票链表
+void destroyLottList(lottNode *pHead)
+{
+    if(NULL == pHead)
+    {
+        printf("\n\t%s:the list is empty!\n", __func__);
+        return;
+    }
+
+    lottNode *p = NULL;
+    while(NULL != pHead)
+    {
+        p = pHead;
+        pHead = pHead->pNext;
+        free(p);
+    }
+    p = NULL;
+    return;
+}
 
 
 
